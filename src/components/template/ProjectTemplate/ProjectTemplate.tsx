@@ -14,6 +14,7 @@ import {
   oneDark as darkTheme,
   oneLight as lightTheme,
 } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { useMedia } from 'react-use';
 import s from './ProjectTemplate.module.scss';
 
 function LinkRenderer({
@@ -40,6 +41,7 @@ const ProjectTemplate: FC = () => {
     content: string;
   }>({ contract: '', content: '' });
   const { theme } = useTheme();
+  const isMobile = useMedia('(max-width: 767px)');
 
   const getContent = async () => {
     const link = examples[currentExample].link;
@@ -130,7 +132,7 @@ const ProjectTemplate: FC = () => {
         rootClassName={s.projectExampleDrawer}
         title={examples[currentExample]?.name}
         placement="right"
-        width={500}
+        width={isMobile ? 'calc(100% - 1rem)' : 600}
         onClose={closeTemplate}
         open={currentExample > -1}
         closeIcon={<AppIcon name="Close" />}

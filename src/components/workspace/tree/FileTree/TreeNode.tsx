@@ -31,7 +31,8 @@ const TreeNode: FC<Props> = ({ node, depth, isOpen, onToggle }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newItemAdd, setNewItemAdd] = useState<Tree['type'] | ''>('');
 
-  const { deleteProjectFile, renameProjectFile, newFileFolder } = useProject();
+  const { deleteProjectFile, renameProjectFile, newFileFolder, activeProject } =
+    useProject();
   const { open: openTab } = useFileTab();
   const { createLog } = useLogActivity();
   const { getFile } = useFile();
@@ -78,7 +79,8 @@ const TreeNode: FC<Props> = ({ node, depth, isOpen, onToggle }) => {
 
   const commitItemCreation = async (name: string) => {
     if (!newItemAdd) return;
-    const path = `${node.data?.path}/${name}`;
+    let path = `${node.data?.path}/${name}`;
+    path = path.replace(activeProject?.path as string, '');
     try {
       await newFileFolder(path, newItemAdd);
       reset();

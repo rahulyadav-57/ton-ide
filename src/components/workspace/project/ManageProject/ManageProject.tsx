@@ -122,7 +122,11 @@ const ManageProject: FC = () => {
 
   return (
     <div className={s.root}>
-      <div className={s.header}>
+      <div
+        className={`${s.header} ${
+          projects.length === 0 ? s.noProjectsFound : ''
+        }`}
+      >
         {projects.length > 0 ? projectHeader() : noProjectExistsUI()}
       </div>
       {projects.length > 0 && projectOptions()}

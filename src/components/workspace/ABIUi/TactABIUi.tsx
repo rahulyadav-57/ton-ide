@@ -10,6 +10,7 @@ import {
   Tree,
 } from '@/interfaces/workspace.interface';
 import { parseInputs } from '@/utility/abi';
+import EventEmitter from '@/utility/eventEmitter';
 import { isIncludesTypeCellOrSlice } from '@/utility/utils';
 import { MinusCircleOutlined } from '@ant-design/icons';
 import { Address, TupleItem } from '@ton/core';
@@ -343,6 +344,7 @@ const TactABIUi: FC<TactABI> = ({
   };
 
   const onSubmit = async (formValues: TactInputFields, fieldName: string) => {
+    EventEmitter.emit('SET_SIDEBAR_VISIBILITY', false);
     try {
       const tsProjectFiles: Record<string, string> = {};
       if (isIncludesTypeCellOrSlice(formValues)) {

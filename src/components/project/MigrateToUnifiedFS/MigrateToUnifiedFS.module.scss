@@ -1,5 +1,10 @@
+@import '/src/styles/variables.scss';
+
 .root {
   min-width: 12rem;
+  @include devices(mobile) {
+    display: none;
+  }
   .btnRestore {
     .icon {
       min-width: 1rem;

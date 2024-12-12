@@ -7,8 +7,17 @@ interface Props {
 }
 export const Layout: FC<Props> = ({ children }) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const setViewportHeight = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  };
   useEffect(() => {
     setIsLoaded(true);
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+    };
   }, []);
 
   if (!isLoaded) {

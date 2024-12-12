@@ -16,6 +16,7 @@ export interface EventEmitterPayloads {
   RELOAD_PROJECT_FILES: string;
   OPEN_PROJECT: string;
   PROJECT_MIGRATED: undefined;
+  SET_SIDEBAR_VISIBILITY: boolean; // This is for mobile view.
 }
 
 const EventEmitter = {

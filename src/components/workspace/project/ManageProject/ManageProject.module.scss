@@ -8,6 +8,9 @@
   .header {
     display: flex;
     justify-content: space-between;
+    &.noProjectsFound {
+      justify-content: center;
+    }
   }
   .startNew {
     .title {

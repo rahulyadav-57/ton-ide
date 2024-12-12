@@ -1,73 +1,93 @@
+@import '/src/styles/variables.scss';
+
 .container {
   background: var(--black-500);
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  @include devices(mobile) {
+    flex-direction: row;
+    width: 100%;
+  }
+  .primaryMenu {
+    @include devices(mobile) {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+    }
+  }
 
   .brandLogo {
     padding: 1.4rem 1.2rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    @include devices(mobile) {
+      display: none;
+    }
     img {
       width: 100%;
-    }
-  }
-  .action {
-    font-size: 1.8rem;
-    padding: 0.7rem 0.1rem;
-    margin: 0.5rem;
-    cursor: pointer;
-    opacity: 0.6;
-    position: relative;
-    color: var(--text-color);
-    display: flex;
-    user-select: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 0.625rem;
-
-    &.isActive,
-    &:hover {
-      opacity: 1;
-      color: var(--primary);
-      &::before {
-        display: block;
-      }
-    }
-    &.disabled {
-      cursor: not-allowed;
-    }
-    .icon {
-      width: 1.5rem;
-    }
-    span {
-      font-size: 0.8rem;
-      display: inline-block;
-      margin-top: 5px;
-      text-align: center;
-    }
-  }
-  .themeSwitch {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1rem auto;
-    align-items: center;
-    border-radius: 50%;
-    height: 3rem;
-    width: 3rem;
-
-    > svg {
-      width: 1.4rem;
-      height: 1.4rem;
     }
   }
   .clone {
     font-size: 1.3rem;
   }
+}
+.action {
+  font-size: 1.8rem;
+  padding: 0.7rem 0.1rem;
+  margin: 0.5rem;
+  cursor: pointer;
+  opacity: 0.6;
+  position: relative;
+  color: var(--text-color);
+  display: flex;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0.625rem;
+  .icon {
+    width: 2rem;
+    height: 2rem;
+  }
+  @include devices(mobile) {
+    padding: 0.7rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  &.isActive,
+  &:hover {
+    opacity: 1;
+    color: var(--primary);
+    // background: rgba(0, 0, 0, 0.7);
+    &::before {
+      display: block;
+    }
+  }
+  &.disabled {
+    cursor: not-allowed;
+  }
+  .icon {
+    width: 1.5rem;
+  }
+  span {
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-top: 5px;
+    text-align: center;
+  }
+}
+.themeSwitch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+  align-items: center;
+  border-radius: 50%;
 }
 .settingItem {
   margin: 0 !important;
@@ -80,6 +100,17 @@
   }
   > div {
     margin: 0 !important;
+  }
+  [class*='ant-form-item-control-input-content'] {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+.settingItem {
+  [class*='ant-form-item-label'] label {
+    @include devices(mobile) {
+      margin-right: 1rem;
+    }
   }
 }
 

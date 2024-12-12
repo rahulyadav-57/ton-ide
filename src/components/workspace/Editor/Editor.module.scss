@@ -1,3 +1,5 @@
+@import '/src/styles/variables.scss';
+
 .container {
   // height: calc(100vh - 15rem);
   height: 100%;
@@ -24,13 +26,28 @@
 
   .editor {
     height: 100%;
+    z-index: 0;
     > div {
       // padding-top: 1rem;
     }
   }
+
   .saveFile {
+    display: none;
     position: absolute;
-    top: 5px;
-    right: 1rem;
+    top: 0.5rem;
+    right: 0;
+    z-index: 1;
+    background: var(--grey-900);
+    width: 1.8rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem 0 0 0.5rem;
+    cursor: pointer;
+
+    @include devices(mobile) {
+      display: flex;
+    }
   }
 }

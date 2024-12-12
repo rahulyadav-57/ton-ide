@@ -3,6 +3,7 @@
 import { DownloadProject } from '@/components/project';
 import { ProjectTemplate } from '@/components/template';
 import { NonProductionNotice } from '@/components/ui';
+import AppIcon from '@/components/ui/icon';
 import { AppConfig } from '@/config/AppConfig';
 import { useFileTab } from '@/hooks';
 import { useLogActivity } from '@/hooks/logActivity.hooks';
@@ -18,7 +19,7 @@ import { Buffer } from 'buffer';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useMemo, useState } from 'react';
 import Split from 'react-split';
-import { useEffectOnce } from 'react-use';
+import { useEffectOnce, useMedia } from 'react-use';
 import BottomPanel from '../BottomPanel/BottomPanel';
 import BuildProject from '../BuildProject';
 import Editor from '../Editor';
@@ -37,6 +38,7 @@ const WorkSpace: FC = () => {
 
   const router = useRouter();
   const [activeMenu, setActiveMenu] = useState<WorkSpaceMenu>('code');
+  const [isSidebarMenuOpen, setIsSidebarMenuOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [contract, setContract] = useState<any>('');
@@ -49,6 +51,8 @@ const WorkSpace: FC = () => {
     loadProjectFiles,
     newFileFolder,
   } = useProject();
+
+  const isMobile = useMedia('(max-width: 767px)');
 
   const { fileTab, open: openTab } = useFileTab();
 
@@ -104,11 +108,12 @@ const WorkSpace: FC = () => {
   }, [cachedProjectPath]);
 
   useEffect(() => {
+    createSandbox(true).catch(() => {});
+
     if (!activeProject) {
       return;
     }
     createLog(`Project '${activeProject.name}' is opened`);
-    createSandbox(true).catch(() => {});
 
     if (fileTab.active) return;
     // Open main file on project switch
@@ -123,10 +128,11 @@ const WorkSpace: FC = () => {
     document.addEventListener('keydown', onKeydown);
     EventEmitter.on('RELOAD_PROJECT_FILES', reloadProjectFiles);
     EventEmitter.on('OPEN_PROJECT', openProject);
+    EventEmitter.on('SET_SIDEBAR_VISIBILITY', setIsSidebarMenuOpen);
 
     Analytics.track('Project Opened', {
       platform: 'IDE',
-      type: 'TON-func',
+      type: `TON-${activeProject?.language}`,
     });
 
     return () => {
@@ -134,6 +140,8 @@ const WorkSpace: FC = () => {
         document.removeEventListener('keydown', onKeydown);
         EventEmitter.off('RELOAD_PROJECT_FILES', reloadProjectFiles);
         EventEmitter.off('OPEN_PROJECT', openProject);
+        EventEmitter.off('SET_SIDEBAR_VISIBILITY', setIsSidebarMenuOpen);
+
         clearLog();
       } catch (error) {
         /* empty */
@@ -146,6 +154,10 @@ const WorkSpace: FC = () => {
       setActiveMenu(tab as WorkSpaceMenu);
     }
   }, [tab]);
+
+  useEffect(() => {
+    setIsSidebarMenuOpen(false);
+  }, [fileTab]);
 
   useEffectOnce(() => {
     setIsLoaded(true);
@@ -163,6 +175,12 @@ const WorkSpace: FC = () => {
           projectName={activeProject?.path ?? ''}
           onMenuClicked={(name) => {
             setActiveMenu(name);
+            setIsSidebarMenuOpen(() => {
+              if (activeMenu === name) {
+                return !isSidebarMenuOpen;
+              }
+              return true;
+            });
             router
               .replace({
                 query: { ...router.query, tab: name },
@@ -180,7 +198,17 @@ const WorkSpace: FC = () => {
           EventEmitter.emit('ON_SPLIT_DRAG_END');
         }}
       >
-        <div className={s.tree}>
+        <div
+          className={`${s.tree} ${isSidebarMenuOpen ? s.hasMenu : s.blankMenu}`}
+        >
+          <span
+            className={s.closeMenu}
+            onClick={() => {
+              setIsSidebarMenuOpen(false);
+            }}
+          >
+            <AppIcon name="Close" />
+          </span>
           {isLoaded && activeMenu === 'code' && (
             <div className="onboarding-file-explorer">
               <span className={s.heading}>Explorer</span>
@@ -233,7 +261,7 @@ const WorkSpace: FC = () => {
                 className={s.splitVertical}
                 minSize={50}
                 gutterSize={4}
-                sizes={[80, 20]}
+                sizes={isMobile ? [65, 35] : [80, 20]}
                 direction="vertical"
                 onDragEnd={() => {
                   EventEmitter.emit('ON_SPLIT_DRAG_END');
@@ -245,7 +273,9 @@ const WorkSpace: FC = () => {
                     <Tabs />
                   </div>
 
-                  <div style={{ height: 'calc(100% - 43px)' }}>
+                  <div
+                    className={`${s.editorWrapper} ${fileTab.items.length > 0 ? s.hasTabs : ''}`}
+                  >
                     {fileTab.active ? <Editor /> : <ProjectTemplate />}
                   </div>
                 </div>

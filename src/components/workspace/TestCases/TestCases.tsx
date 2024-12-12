@@ -151,7 +151,10 @@ const TestCases: FC<Props> = ({ projectId }) => {
         },
       }),
     );
-    Analytics.track('Execute Test Case', { platform: 'IDE', type: 'TON-func' });
+    Analytics.track('Execute Test Case', {
+      platform: 'IDE',
+      type: `TEST_CASE`,
+    });
   };
 
   return (
@@ -163,6 +166,7 @@ const TestCases: FC<Props> = ({ projectId }) => {
         description="Select .spec.ts file to run test cases"
         onClick={(e, data) => {
           executeTestCases(data).catch(() => {});
+          EventEmitter.emit('SET_SIDEBAR_VISIBILITY', false);
         }}
       />
     </div>

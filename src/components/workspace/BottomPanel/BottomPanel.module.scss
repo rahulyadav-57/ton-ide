@@ -1,8 +1,13 @@
+@import '/src/styles/variables.scss';
+
 .root {
   background-color: var(--dark-800);
   height: 100%;
   z-index: 1000;
   position: relative;
+  @include devices(mobile) {
+    z-index: 0;
+  }
   .tab {
     display: inline-flex;
     color: rgb(130, 129, 129);
@@ -10,6 +15,9 @@
     border-bottom: 1px solid rgb(76, 76, 76);
     text-transform: uppercase;
     font-size: 0.9rem;
+    @include devices(mobile) {
+      display: none;
+    }
   }
   .view {
     padding: 0.5rem;
@@ -18,8 +26,15 @@
   .actions {
     display: flex;
     gap: 0.5rem;
+    @include devices(mobile) {
+      width: 100%;
+      justify-content: space-between;
+    }
     .filterText {
       max-width: 200px;
+      @include devices(mobile) {
+        max-width: 150px;
+      }
     }
   }
   .tabsContainer {

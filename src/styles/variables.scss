@@ -1,0 +1,25 @@
+// Screen Resolution
+$mobileResolution: 767px;
+$tabResolution: 768px;
+$ipadProResolution: 1024px;
+$maxSectionWidth: 1440px;
+
+@mixin devices($breakpoint) {
+  @if $breakpoint == ipad {
+    @media only screen and (max-width: $ipadProResolution) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == tablet {
+    @media only screen and (max-width: $tabResolution) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == mobile {
+    @media only screen and (max-width: $mobileResolution) {
+      @content;
+    }
+  }
+}
